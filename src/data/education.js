@@ -36,7 +36,7 @@ export const education = [
 
 export const workExperience = [
     {
-        title: "Full Stack Developer",
+        title: "Junior Software Engineer",
         institution: "Clove Technologies Pvt. Ltd.",
         duration: "Sep 2025 - Present",
         location: "Hyderabad",
