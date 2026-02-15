@@ -81,7 +81,7 @@ const Skills = () => {
                     </button>
 
                     {/* Slides Area */}
-                    <div className="overflow-hidden h-[520px] px-12 md:px-24">
+                    <div className="overflow-hidden h-auto px-4 sm:px-12 md:px-24">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={currentSlide}
@@ -123,7 +123,7 @@ const Skills = () => {
                                                             onClick={() => setSelectedSkill(skill)}
                                                         >
                                                             {/* Skill Icon Container - Adjusted Size */}
-                                                            <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-xl bg-white/5 p-2 group-hover/skill:bg-white/10 transition-all duration-300 flex items-center justify-center flex-shrink-0">
+                                                            <div className="relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-white/5 p-2 sm:p-3 group-hover/skill:bg-white/10 transition-all duration-300 flex items-center justify-center flex-shrink-0">
                                                                 <img
                                                                     src={skill.icon}
                                                                     alt={`${skill.name} icon`}
