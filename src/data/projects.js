@@ -16,7 +16,7 @@ import {
 // Import existing project images
 import portfolioImg from '../assets/images/projects/portfolio.png';
 import carpentImg from '../assets/images/projects/carpent.png';
-import shoppingCartImg from '../assets/images/projects/ShoppingCart.jpeg';
+import ecommerceImg from '../assets/images/projects/ecommerce.png';
 import netflixImg from '../assets/images/projects/netflix.jpeg';
 import spotifyImg from '../assets/images/projects/Spotify.png';
 import bingoImg from '../assets/images/projects/BingoGame.png';
@@ -73,17 +73,18 @@ const projects = [
         ]
     },
     {
-        image: shoppingCartImg,
-        title: "Simple Shopping Website",
-        description: "A simple shopping cart application.",
+        image: ecommerceImg,
+        title: "EcommerceApp",
+        description: "A fully functional Ecommerce Application with cart and product management.",
         stack: [
             { icon: SiReact, name: "React.js", color: "#61DBFB" },
         ],
-        github: "https://github.com/gangadharpepakayala/react-shopping-cart",
-        live: "https://gangadhar-shopping-site.netlify.app/",
+        github: "https://github.com/gangadharpepakayala/EcommerceApp",
+        live: "https://ecommercepappp.netlify.app/",
         highlights: [
             "Product listing",
-            "Cart functionality"
+            "Cart functionality",
+            "Responsive Design"
         ]
     },
     {
