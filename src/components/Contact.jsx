@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
-import emailjs from '@emailjs/browser';
-import { FaGithub, FaLinkedin, FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
+
+const WEB3FORMS_KEY = "d85639f5-2812-4101-aa95-89a41d03a04a";
 
 const Contact = () => {
     const form = useRef();
@@ -11,32 +12,37 @@ const Contact = () => {
     const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setShowToast(false);
 
-        // Using the credentials from your previous setup
-        const SERVICE_ID = 'service_cs09qul';
-        const TEMPLATE_ID = 'dsvsdvybsdvsdv';
-        const PUBLIC_KEY = 'VFx-iOduTkCatcCQx';
+        const formData = new FormData(form.current);
+        formData.append("access_key", WEB3FORMS_KEY);
 
-        emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
-            .then((result) => {
-                console.log(result.text);
-                setToastMsg("Message sent successfully!");
+        try {
+            const res = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                setToastMsg("Message sent successfully! I'll get back to you soon.");
                 setIsError(false);
                 form.current.reset();
-            }, (error) => {
-                console.log(error.text);
-                setToastMsg("Failed to send message. Please try again.");
+            } else {
+                setToastMsg(data.message || "Failed to send. Please try again.");
                 setIsError(true);
-            })
-            .finally(() => {
-                setLoading(false);
-                setShowToast(true);
-                setTimeout(() => setShowToast(false), 4000);
-            });
+            }
+        } catch {
+            setToastMsg("Network error. Please check your connection and try again.");
+            setIsError(true);
+        } finally {
+            setLoading(false);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 5000);
+        }
     };
 
     return (
@@ -50,24 +56,24 @@ const Contact = () => {
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-[0_0_30px_rgba(6,182,212,0.4)] mb-3 sm:mb-4">
                         Contact Me
                     </h2>
-                    <div className="w-16 sm:w-20 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-indigo-400 rounded-full mx-auto"></div>
-
+                    <div className="w-16 sm:w-20 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-indigo-400 rounded-full mx-auto" />
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-10 mb-12 sm:mb-16">
                     {/* Contact Form (Left) */}
                     <div className="relative group" data-aos="fade-right">
                         <div className="relative p-6 sm:p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:border-cyan-400/50 transition-all duration-300">
-                            {/* Shimmer Effect */}
-                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
+                            {/* Shimmer */}
+                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl" />
 
                             <h3 className="text-2xl font-bold text-white mb-6">Send a Message</h3>
 
                             <form ref={form} onSubmit={handleSubmit} className="space-y-4">
+                                {/* Web3Forms requires no action / method on the <form> element when using fetch */}
                                 <div className="group/input">
                                     <input
                                         type="text"
-                                        name="user_name"
+                                        name="name"
                                         required
                                         placeholder="Full Name"
                                         autoComplete="off"
@@ -77,7 +83,7 @@ const Contact = () => {
                                 <div className="group/input">
                                     <input
                                         type="email"
-                                        name="user_email"
+                                        name="email"
                                         required
                                         placeholder="Email Address"
                                         autoComplete="off"
@@ -95,10 +101,18 @@ const Contact = () => {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 text-white font-semibold hover:from-cyan-400 hover:to-indigo-400 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2"
                                     disabled={loading}
+                                    className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 text-white font-semibold hover:from-cyan-400 hover:to-indigo-400 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                                 >
-                                    {loading ? 'Sending...' : (
+                                    {loading ? (
+                                        <>
+                                            <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                                            </svg>
+                                            Sending…
+                                        </>
+                                    ) : (
                                         <>
                                             Send Message
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,23 +191,18 @@ const Contact = () => {
                                         </div>
                                         <span className="text-xs text-gray-400 group-hover/social:text-white transition-colors">LinkedIn</span>
                                     </a>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
-
                 {/* Footer */}
                 <div className="mt-16 pt-8 border-t border-white/10">
                     <div className="text-center space-y-2">
                         <p className="text-gray-400 text-sm">
                             © {new Date().getFullYear()}{" "}
-                            <span className="text-white font-medium">Gangadhar Pepakayala</span>. All
-                            rights reserved.
+                            <span className="text-white font-medium">Gangadhar Pepakayala</span>. All rights reserved.
                         </p>
                         <p className="text-gray-500 text-xs">
                             Built with <span className="text-cyan-400">React.js</span> &{" "}
@@ -206,29 +215,22 @@ const Contact = () => {
             {/* Toast Notification */}
             {showToast && (
                 <div
-                    className={`fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50 max-w-[90vw] sm:max-w-md ${isError
-                        ? "bg-red-500/90 backdrop-blur-md border border-red-400/50"
-                        : "bg-green-500/90 backdrop-blur-md border border-green-400/50"
-                        } text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl shadow-2xl animate-fade-in mx-4`}
+                    className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] sm:max-w-md ${
+                        isError
+                            ? "bg-red-500/90 backdrop-blur-md border border-red-400/50"
+                            : "bg-green-500/90 backdrop-blur-md border border-green-400/50"
+                    } text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl shadow-2xl mx-4`}
                     role="status"
                     aria-live="polite"
                 >
                     <div className="flex items-center gap-2 sm:gap-3">
                         {isError ? (
                             <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                    clipRule="evenodd"
-                                />
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                             </svg>
                         ) : (
                             <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clipRule="evenodd"
-                                />
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                             </svg>
                         )}
                         <span className="font-medium text-sm sm:text-base">{toastMsg}</span>
