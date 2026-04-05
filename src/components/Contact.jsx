@@ -144,15 +144,22 @@ const Contact = () => {
                                     </a>
 
                                     {/* WhatsApp */}
-                                    <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 group/item">
+                                    <a
+                                        href="https://wa.me/919390143192?text=Hi%20I%20saw%20your%20portfolio"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-teal-400/10 hover:border-teal-400/30 transition-all duration-300 group/item"
+                                    >
                                         <div className="w-10 h-10 rounded-lg bg-teal-400/10 flex items-center justify-center flex-shrink-0 border border-teal-400/20 group-hover/item:bg-teal-400/20 transition-colors">
-                                            <IoLogoWhatsapp className="text-teal-400 text-xl" />
+                                            <IoLogoWhatsapp className="text-teal-400 text-xl group-hover/item:scale-110 transition-transform duration-300" />
                                         </div>
                                         <div>
                                             <p className="text-gray-400 text-sm mb-1">WhatsApp</p>
-                                            <p className="text-white font-medium">+91 9390143192</p>
+                                            <p className="text-white font-medium group-hover/item:text-teal-400 transition-colors duration-300">
+                                                +91 9390143192
+                                            </p>
                                         </div>
-                                    </div>
+                                    </a>
 
                                     {/* Location */}
                                     <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 group/item">
@@ -215,11 +222,10 @@ const Contact = () => {
             {/* Toast Notification */}
             {showToast && (
                 <div
-                    className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] sm:max-w-md ${
-                        isError
+                    className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] sm:max-w-md ${isError
                             ? "bg-red-500/90 backdrop-blur-md border border-red-400/50"
                             : "bg-green-500/90 backdrop-blur-md border border-green-400/50"
-                    } text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl shadow-2xl mx-4`}
+                        } text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg sm:rounded-xl shadow-2xl mx-4`}
                     role="status"
                     aria-live="polite"
                 >
